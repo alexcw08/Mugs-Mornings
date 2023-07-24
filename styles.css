@@ -24,11 +24,17 @@ a {
   color: #ffc425;
 }
 table {
+  border-collapse: collapse;
   background-color: #c2a599;
   padding: 40px;
   margin-left: auto;
   margin-right: auto;
   border-radius: 5px;
+}
+th,
+td {
+  padding: 10px;
+  text-align: left;
 }
 footer {
   background-color: #3f322f;
