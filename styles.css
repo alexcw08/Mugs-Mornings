@@ -9,6 +9,7 @@ body {
 }
 main {
   padding: 10px;
+  margin-bottom: 100px;
 }
 h1 {
   color: #ffc425;
@@ -27,7 +28,7 @@ table {
   border-collapse: collapse;
   background-color: #c2a599;
   padding: 40px;
-  margin-left: auto;
+  /* margin-left: auto; */
   margin-right: auto;
   border-radius: 5px;
 }
@@ -59,8 +60,20 @@ footer {
   border-style: none;
   box-sizing: border-box;
   cursor: pointer;
-  padding: 10px;
+  width: fit-content;
+  padding: 10px 30px;
+  margin: 5px;
 }
 .addButton:hover {
   transform: scale(1.1);
+}
+form {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  padding: 25px;
+  background: #f1f1f1;
+}
+input {
+  padding: 5px;
 }
