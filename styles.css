@@ -23,6 +23,11 @@ nav {
 a {
   text-decoration: none;
   color: #ffc425;
+  padding: 15px;
+}
+a:hover {
+  cursor: pointer;
+  background-color: #2f2523;
 }
 table {
   border-collapse: collapse;
@@ -76,4 +81,10 @@ form {
 }
 input {
   padding: 5px;
+}
+.navCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
 }
