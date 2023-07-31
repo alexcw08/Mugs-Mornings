@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 16, 2023 at 11:28 AM
+-- Generation Time: Jul 31, 2023 at 03:53 PM
 -- Server version: 10.6.12-MariaDB-log
 -- PHP Version: 8.2.4
 
@@ -79,22 +79,22 @@ INSERT INTO `Employees` (`employeeID`, `name`, `position`, `email`, `phoneNumber
 
 CREATE TABLE `Orders` (
   `orderID` int(11) NOT NULL,
-  `dateTime` datetime NOT NULL,
-  `orderTotal` decimal(6,2) NOT NULL,
   `customerID` int(11) NOT NULL,
-  `employeeID` int(11) NOT NULL
+  `employeeID` int(11) NOT NULL,
+  `dateTime` datetime NOT NULL,
+  `orderTotal` decimal(6,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 --
 -- Dumping data for table `Orders`
 --
 
-INSERT INTO `Orders` (`orderID`, `dateTime`, `orderTotal`, `customerID`, `employeeID`) VALUES
-(1, '2023-07-15 12:00:00', 45.67, 1, 2),
-(2, '2023-07-15 12:30:00', 78.99, 2, 3),
-(3, '2023-07-15 13:00:00', 120.50, 3, 4),
-(4, '2023-07-15 13:30:00', 34.75, 4, 5),
-(5, '2023-07-15 14:00:00', 89.99, 5, 1);
+INSERT INTO `Orders` (`orderID`, `customerID`, `employeeID`, `dateTime`, `orderTotal`) VALUES
+(1, 1, 2, '2023-07-15 12:00:00', 7.48),
+(2, 2, 3, '2023-07-15 12:30:00', 13.50),
+(3, 3, 4, '2023-07-15 13:00:00', 18.95),
+(4, 4, 5, '2023-07-15 13:30:00', 20.98),
+(5, 5, 1, '2023-07-15 14:00:00', 12.00);
 
 -- --------------------------------------------------------
 
@@ -103,21 +103,24 @@ INSERT INTO `Orders` (`orderID`, `dateTime`, `orderTotal`, `customerID`, `employ
 --
 
 CREATE TABLE `Order_Details` (
-  `quantity` int(11) NOT NULL,
+  `orderID` int(11) NOT NULL,
   `productID` int(11) NOT NULL,
-  `orderID` int(11) NOT NULL
+  `soldQuantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 --
 -- Dumping data for table `Order_Details`
 --
 
-INSERT INTO `Order_Details` (`quantity`, `productID`, `orderID`) VALUES
-(2, 1, 1),
-(1, 2, 2),
-(3, 3, 3),
-(4, 4, 4),
-(1, 5, 5);
+INSERT INTO `Order_Details` (`orderID`, `productID`, `soldQuantity`) VALUES
+(1, 1, 2),
+(1, 2, 1),
+(2, 5, 3),
+(3, 1, 4),
+(3, 3, 1),
+(4, 1, 2),
+(4, 4, 2),
+(5, 2, 8);
 
 -- --------------------------------------------------------
 
@@ -127,8 +130,11 @@ INSERT INTO `Order_Details` (`quantity`, `productID`, `orderID`) VALUES
 
 CREATE TABLE `Products` (
   `productID` int(11) NOT NULL,
+  `supplierID` int(11) NOT NULL,
   `name` varchar(45) NOT NULL,
-  `price` varchar(45) NOT NULL,
+  `price` decimal(6,2) NOT NULL,
+  `stockQuantity` int(11) NOT NULL,
+  `deliveryDate` datetime NOT NULL,
   `description` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
@@ -136,12 +142,12 @@ CREATE TABLE `Products` (
 -- Dumping data for table `Products`
 --
 
-INSERT INTO `Products` (`productID`, `name`, `price`, `description`) VALUES
-(1, 'Coffee', '2.99', 'Freshly brewed coffee'),
-(2, 'Bagel', '1.50', 'Freshly baked bagel'),
-(3, 'Sandwich', '6.99', 'Delicious sandwich'),
-(4, 'Salad', '7.50', 'Healthy salad'),
-(5, 'Cake', '4.50', 'Delicious cake');
+INSERT INTO `Products` (`productID`, `supplierID`, `name`, `price`, `stockQuantity`, `deliveryDate`, `description`) VALUES
+(1, 1, 'Coffee', 2.99, 300, '2023-07-14 10:00:00', 'Freshly brewed coffee'),
+(2, 1, 'Bagel', 1.50, 200, '2023-07-14 10:00:00', 'Freshly baked bagel'),
+(3, 2, 'Sandwich', 6.99, 50, '2023-07-14 11:00:00', 'Delicious sandwich'),
+(4, 2, 'Salad', 7.50, 75, '2023-07-14 11:00:00', 'Healthy salad'),
+(5, 3, 'Cake', 4.50, 15, '2023-07-14 12:00:00', 'Delicious cake');
 
 -- --------------------------------------------------------
 
@@ -153,44 +159,17 @@ CREATE TABLE `Suppliers` (
   `supplierID` int(11) NOT NULL,
   `name` varchar(45) NOT NULL,
   `email` varchar(45) NOT NULL,
-  `phoneNumber` varchar(10) NOT NULL,
-  `supplyID` int(11) NOT NULL
+  `phoneNumber` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 --
 -- Dumping data for table `Suppliers`
 --
 
-INSERT INTO `Suppliers` (`supplierID`, `name`, `email`, `phoneNumber`, `supplyID`) VALUES
-(1, 'Fresh Food Suppliers', 'info@freshfoodsuppliers.com', '6543210987', 1),
-(2, 'Bakery Delights', 'info@bakerydelights.com', '7654321098', 2),
-(3, 'Coffee Beans Co.', 'info@coffeebeansco.com', '8765432109', 3),
-(4, 'Healthy Veggie Farm', 'info@healthyveggiefarm.com', '9876543210', 4),
-(5, 'Sweet Treats Co.', 'info@sweettreatsco.com', '0123456789', 5);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Supplies`
---
-
-CREATE TABLE `Supplies` (
-  `supplyID` int(11) NOT NULL,
-  `deliveryDate` datetime NOT NULL,
-  `productID` int(11) NOT NULL,
-  `quantity` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
-
---
--- Dumping data for table `Supplies`
---
-
-INSERT INTO `Supplies` (`supplyID`, `deliveryDate`, `productID`, `quantity`) VALUES
-(1, '2023-07-14 10:00:00', 1, 300),
-(2, '2023-07-14 11:00:00', 2, 200),
-(3, '2023-07-14 12:00:00', 3, 50),
-(4, '2023-07-14 13:00:00', 4, 75),
-(5, '2023-07-14 14:00:00', 5, 15);
+INSERT INTO `Suppliers` (`supplierID`, `name`, `email`, `phoneNumber`) VALUES
+(1, 'Coffee Beans and Bagels Co.', 'info@coffeebeansco.com', '6543210987'),
+(2, 'Deli Delights', 'info@delidelights.com', '7654321098'),
+(3, 'Baked Goods Inc', 'info@bakedgoodsinc.com', '8765432109');
 
 --
 -- Indexes for dumped tables
@@ -213,35 +192,28 @@ ALTER TABLE `Employees`
 --
 ALTER TABLE `Orders`
   ADD PRIMARY KEY (`orderID`),
-  ADD KEY `fk_Orders_Customers_idx` (`customerID`),
-  ADD KEY `fk_Orders_Employees1_idx` (`employeeID`);
+  ADD KEY `fk_Order_Customer_idx` (`customerID`),
+  ADD KEY `fk_Order_Employee1_idx` (`employeeID`);
 
 --
 -- Indexes for table `Order_Details`
 --
 ALTER TABLE `Order_Details`
-  ADD KEY `fk_Order_Details_Products1_idx` (`productID`),
-  ADD KEY `fk_Order_Details_Orders1_idx` (`orderID`);
+  ADD KEY `fk_Order_Details_Product1_idx` (`productID`),
+  ADD KEY `fk_Order_Details_Order1` (`orderID`);
 
 --
 -- Indexes for table `Products`
 --
 ALTER TABLE `Products`
-  ADD PRIMARY KEY (`productID`);
+  ADD PRIMARY KEY (`productID`),
+  ADD KEY `fk_Products_Suppliers1_idx` (`supplierID`);
 
 --
 -- Indexes for table `Suppliers`
 --
 ALTER TABLE `Suppliers`
-  ADD PRIMARY KEY (`supplierID`),
-  ADD KEY `fk_Suppliers_Supplies1_idx` (`supplyID`);
-
---
--- Indexes for table `Supplies`
---
-ALTER TABLE `Supplies`
-  ADD PRIMARY KEY (`supplyID`),
-  ADD KEY `fk_Supplies_Products1_idx` (`productID`);
+  ADD PRIMARY KEY (`supplierID`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -275,13 +247,7 @@ ALTER TABLE `Products`
 -- AUTO_INCREMENT for table `Suppliers`
 --
 ALTER TABLE `Suppliers`
-  MODIFY `supplierID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `Supplies`
---
-ALTER TABLE `Supplies`
-  MODIFY `supplyID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `supplierID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
@@ -291,27 +257,21 @@ ALTER TABLE `Supplies`
 -- Constraints for table `Orders`
 --
 ALTER TABLE `Orders`
-  ADD CONSTRAINT `fk_Orders_Customers` FOREIGN KEY (`customerID`) REFERENCES `Customers` (`customerID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_Orders_Employees1` FOREIGN KEY (`employeeID`) REFERENCES `Employees` (`employeeID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_Order_Customer` FOREIGN KEY (`customerID`) REFERENCES `Customers` (`customerID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Order_Employee1` FOREIGN KEY (`employeeID`) REFERENCES `Employees` (`employeeID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `Order_Details`
 --
 ALTER TABLE `Order_Details`
-  ADD CONSTRAINT `fk_Order_Details_Orders1` FOREIGN KEY (`orderID`) REFERENCES `Orders` (`orderID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `fk_Order_Details_Products1` FOREIGN KEY (`productID`) REFERENCES `Products` (`productID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `fk_Order_Details_Order1` FOREIGN KEY (`orderID`) REFERENCES `Orders` (`orderID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `fk_Order_Details_Product1` FOREIGN KEY (`productID`) REFERENCES `Products` (`productID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Constraints for table `Suppliers`
+-- Constraints for table `Products`
 --
-ALTER TABLE `Suppliers`
-  ADD CONSTRAINT `fk_Suppliers_Supplies1` FOREIGN KEY (`supplyID`) REFERENCES `Supplies` (`supplyID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `Supplies`
---
-ALTER TABLE `Supplies`
-  ADD CONSTRAINT `fk_Supplies_Products1` FOREIGN KEY (`productID`) REFERENCES `Products` (`productID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `Products`
+  ADD CONSTRAINT `fk_Products_Suppliers1` FOREIGN KEY (`supplierID`) REFERENCES `Suppliers` (`supplierID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
