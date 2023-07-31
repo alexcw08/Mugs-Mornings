@@ -66,10 +66,10 @@ SELECT `quantity`, `productID` FROM `Order_Details` WHERE `orderID` = :orderID
 SELECT `productID`, `name` FROM `Products`
 
 -- add a new Product
-INSERT INTO `Products` (`productID`, `name`, `price`, `description`) VALUES (:productID, :name, :price, :description)
+INSERT INTO `Products` (`productID`, `supplierID`, `name`, `price`, `stockQuantity`, `deliveryDate`, `description`) VALUES (:productID, :supplierID, :name, :price, :stockQuantity, :deliveryDate, :description)
 
 -- update an existing Product based on submission of the Update Product form
-UPDATE `Products` SET `name` = :name, `price` = :price, `description` = :description WHERE `productID` = :productID
+UPDATE `Products` SET `name` = :name, `price` = :price, `stockQuantity` = :stockQuantity, `deliveryDate` = :deliveryDate, `description` = :description WHERE `productID` = :productID
 
 -- delete a Product
 DELETE FROM `Products` WHERE `productID` = :productID
@@ -83,33 +83,16 @@ SELECT `name`, `price` FROM `Products` WHERE `productID` = :productID
 SELECT `supplierID`, `name` FROM `Suppliers`
 
 -- add a new Supplier
-INSERT INTO `Suppliers` (`supplierID`, `name`, `email`, `phoneNumber`, `supplyID`) VALUES (:supplierID, :name, :email, :phoneNumber, :supplyID)
+INSERT INTO `Suppliers` (`supplierID`, `name`, `email`, `phoneNumber`) VALUES (:supplierID, :name, :email, :phoneNumber)
 
 -- update an existing Supplier based on submission of the Update Supplier form
-UPDATE `Suppliers` SET `name` = :name, `email` = :email, `phoneNumber` = :phoneNumber, `supplyID` = :supplyID WHERE `supplierID` = :supplierID
+UPDATE `Suppliers` SET `name` = :name, `email` = :email, `phoneNumber` = :phoneNumber WHERE `supplierID` = :supplierID
 
 -- delete a Supplier
 DELETE FROM `Suppliers` WHERE `supplierID` = :supplierID
 
 -- select a Supplier's name and email based on their ID
 SELECT `name`, `email` FROM `Suppliers` WHERE `supplierID` = :supplierID
-
--- SUPPLIES
-
--- get all Supply IDs and Names to populate the Supply dropdown
-SELECT `supplyID`, `name` FROM `Supplies`
-
--- add a new Supply
-INSERT INTO `Supplies` (`supplyID`, `deliveryDate`, `productID`, `quantity`) VALUES (:supplyID, :deliveryDate, :productID, :quantity)
-
--- update an existing Supply based on submission of the Update Supply form
-UPDATE `Supplies` SET `deliveryDate` = :deliveryDate, `productID` = :productID, `quantity` = :quantity WHERE `supplyID` = :supplyID
-
--- delete a Supply
-DELETE FROM `Supplies` WHERE `supplyID` = :supplyID
-
--- select a Supply's deliveryDate and quantity based on their ID
-SELECT `deliveryDate`, `quantity` FROM `Supplies` WHERE `supplyID` = :supplyID
 
 -- CALCULATIONS
 
@@ -179,3 +162,6 @@ SELECT * FROM Orders WHERE orderTotal > :orderTotal
 
 -- Retrieve all orders that greater than a specific value by a specific customer
 SELECT * FROM Orders WHERE orderTotal > :orderTotal AND customerID = :customerID
+
+-- Retrieve all suppliers by a specific product ID
+SELECT * FROM Suppliers WHERE productID = :productID
