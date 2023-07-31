@@ -18,7 +18,6 @@
           <a href="orderDetails.html">Order Details</a>
           <a href="products.html">Products</a>
           <a href="employees.html">Employees</a>
-          <a href="supplies.html">Supplies</a>
           <a href="suppliers.html">Suppliers</a>
         </div>
       </nav>
@@ -31,48 +30,72 @@
         <thead>
           <tr>
             <th>Product ID</th>
+            <th>Supplier Id</th>
             <th>Name</th>
             <th>Price</th>
+            <th>Stock Quantity</th>
+            <th>Delivery Date</th>
             <th>Description</th>
           </tr>
         </thead>
         <tr>
           <td>1</td>
+          <td>1</td>
           <td>Coffee</td>
           <td>2.99</td>
+          <td>300</td>
+          <td>7/14/2023 10:00</td>
           <td>Freshly brewed coffee</td>
         </tr>
         <tr>
           <td>2</td>
+          <td>1</td>
           <td>Bagel</td>
           <td>1.50</td>
+          <td>200</td>
+          <td>7/14/2023 10:00</td>
           <td>Freshly baked bagel</td>
         </tr>
         <tr>
           <td>3</td>
+          <td>2</td>
           <td>Sandwich</td>
           <td>6.99</td>
+          <td>50</td>
+          <td>7/14/2023 12:00</td>
           <td>Delicious sandwich</td>
         </tr>
         <tr>
           <td>4</td>
+          <td>2</td>
           <td>Salad</td>
           <td>7.50</td>
+          <td>75</td>
+          <td>7/14/2023 11:00</td>
           <td>Healthy salad</td>
         </tr>
         <tr>
           <td>5</td>
+          <td>3</td>
           <td>Cake</td>
           <td>4.50</td>
+          <td>15</td>
+          <td>7/14/2023 12:00</td>
           <td>Delicious cake</td>
         </tr>
       </table>
       <h3>Add a new product</h3>
       <form action="">
+        <label for="supplierID">Supplier ID</label>
+        <input type="number" name="supplierID" />
         <label for="name">Name</label>
         <input type="text" name="name" />
         <label for="price">Price</label>
         <input type="text" name="price" />
+        <label for="stockQuantity">Stock Quantity</label>
+        <input type="number" name="stockQuantity" />
+        <label for="deliveryDate">Delivery Date</label>
+        <input type="datetime" name="deliveryDate" />
         <label for="description">Description</label>
         <input type="text" name="description" />
         <button class="addButton">Add</button>
@@ -80,10 +103,17 @@
       <h3>Update a product</h3>
       <form action="">
         <label for="productID">Product ID: 1</label>
+        <label for="supplierID">Supplier ID</label>
+        <input type="number" name="supplierID" />
         <label for="name">Name</label>
         <input type="text" name="name" />
         <label for="price">Price</label>
         <input type="text" name="price" />
+
+        <label for="stockQuantity">Stock Quantity</label>
+        <input type="number" name="stockQuantity" />
+        <label for="deliveryDate">Delivery Date</label>
+        <input type="datetime" name="deliveryDate" />
         <label for="description">Description</label>
         <input type="text" name="description" />
         <button class="addButton">Update</button>

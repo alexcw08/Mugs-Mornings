@@ -35,17 +35,22 @@ a:hover {
 table {
   border-collapse: collapse;
   background-color: #c2a599;
-  padding: 40px;
-  /* margin-left: auto; */
-  margin-right: auto;
-  /* border-radius: 5px; */
+  width: 100%;
+  border-radius: 5px;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
+}
+th {
+  background-color: #3f322f;
+  color: #c2a599;
 }
 th,
 td {
   padding: 10px;
   text-align: left;
+}
+tr:nth-child(odd) {
+  background-color: #d1bcb3;
 }
 footer {
   background-color: #3f322f;
@@ -82,7 +87,8 @@ form {
   flex-direction: column;
   width: 400px;
   padding: 25px;
-  background: #f1f1f1;
+  background: #d1bcb3;
+  color: #3f322f;
 }
 input {
   padding: 5px;
@@ -98,9 +104,10 @@ input {
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  background-color: #c2a599;
+  background-color: #3f322f;
   padding: 0;
   border-bottom: 1px solid black;
+  color: #c2a599;
 }
 .filterBtn {
   padding: 5px;
