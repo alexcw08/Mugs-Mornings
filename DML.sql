@@ -9,8 +9,9 @@ INSERT INTO `Customers` (`customerID`, `name`, `email`, `phoneNumber`, `birthday
 -- update an existing Customer based on submission of the Update Customer form
 UPDATE `Customers` SET `name` = :name, `email` = :email, `phoneNumber` = :phoneNumber, `birthday` = :birthday WHERE `customerID` = :customerID
 
--- delete a Customer
+-- delete a Customer and all of their Orders
 DELETE FROM `Customers` WHERE `customerID` = :customerID
+DELETE FROM `Orders` WHERE `customerID` = :customerID
 
 -- select a Customer's name and email based on their ID
 SELECT `name`, `email` FROM `Customers` WHERE `customerID` = :customerID
@@ -26,8 +27,9 @@ INSERT INTO `Employees` (`employeeID`, `name`,`position`, `email`, `phoneNumber`
 -- update an existing Employee based on submission of the Update Employee form
 UPDATE `Employees` SET `name` = :name, `position` = :position, `email` = :email, `phoneNumber` = :phoneNumber WHERE `employeeID` = :employeeID
 
--- delete a Employee
+-- delete a Employee and update all of their Orders
 DELETE FROM `Employees` WHERE `employeeID` = :employeeID
+UPDATE `Orders` SET `employeeID` = NULL WHERE `employeeID` = :employeeID
 
 -- select an Employee's name and email based on their ID
 SELECT `name`, `email` FROM `Employees` WHERE `employeeID` = :employeeID
@@ -43,8 +45,10 @@ INSERT INTO `Orders` (`orderID`, `dateTime`, `orderTotal`, `customerID`, `employ
 -- update an existing Order based on submission of the Update Order form
 UPDATE `Orders` SET `dateTime` = :dateTime, `orderTotal` = :orderTotal, `customerID` = :customerID, `employeeID` = :employeeID WHERE `orderID` = :orderID
 
--- delete a Order
+-- delete a Order and all of their Order_Details
 DELETE FROM `Orders` WHERE `orderID` = :orderID
+UPDATE `Order_Details` SET `orderID` = NULL WHERE `orderID` = :orderID
+UPDATE `Order_Details` SET `productID` = NULL WHERE `orderID` = :orderID
 
 -- select an Order's dateTime and orderTotal based on their ID
 SELECT `dateTime`, `orderTotal` FROM `Orders` WHERE `orderID` = :orderID
@@ -52,13 +56,22 @@ SELECT `dateTime`, `orderTotal` FROM `Orders` WHERE `orderID` = :orderID
 -- Order_Details
 
 -- get all Order_Details to populate the Order_Details dropdown
-SELECT `quantity`, `productID`, `orderID` FROM `Order_Details`
+SELECT `soldQuantity`, `productID`, `orderID` FROM `Order_Details`
+
+-- add a new Order_Details
+INSERT INTO `Order_Details` (`soldQuantity`, `productID`, `orderID`) VALUES (:soldQuantity, :productID, :orderID)
 
 -- update an existing Order_Details based on submission of the Update Order_Details form
-UPDATE `Order_Details` SET `quantity` = :quantity, `productID` = :productID, `orderID` = :orderID WHERE `orderID` = :orderID
+UPDATE `Order_Details` SET `soldQuantity` = :soldQuantity, `productID` = :productID, `orderID` = :orderID WHERE `orderID` = :orderID
+
+-- delete a Order_Details
+UPDATE `Order_Details` SET `orderID` = NULL, `productID` = NULL WHERE `orderID` = :orderID AND `productID` = :productID;
 
 -- select an Order_Details's quantity and productID based on their ID
-SELECT `quantity`, `productID` FROM `Order_Details` WHERE `orderID` = :orderID
+SELECT `soldQuantity`, `productID` FROM `Order_Details` WHERE `orderID` = :orderID
+
+-- clear Order_Details for null values
+DELETE FROM `Order_Details` WHERE `orderID` IS NULL AND `productID` IS NULL
 
 -- PRODUCTS
 
@@ -71,8 +84,10 @@ INSERT INTO `Products` (`productID`, `supplierID`, `name`, `price`, `stockQuanti
 -- update an existing Product based on submission of the Update Product form
 UPDATE `Products` SET `name` = :name, `price` = :price, `stockQuantity` = :stockQuantity, `deliveryDate` = :deliveryDate, `description` = :description WHERE `productID` = :productID
 
--- delete a Product
+-- delete a Product and all of their Order_Details
 DELETE FROM `Products` WHERE `productID` = :productID
+UPDATE `Order_Details` SET `productID` = NULL WHERE `productID` = :productID
+UPDATE `Order_Details` SET `orderID` = NULL WHERE `productID` = :productID
 
 -- select a Product's name and price based on their ID
 SELECT `name`, `price` FROM `Products` WHERE `productID` = :productID
@@ -88,8 +103,9 @@ INSERT INTO `Suppliers` (`supplierID`, `name`, `email`, `phoneNumber`) VALUES (:
 -- update an existing Supplier based on submission of the Update Supplier form
 UPDATE `Suppliers` SET `name` = :name, `email` = :email, `phoneNumber` = :phoneNumber WHERE `supplierID` = :supplierID
 
--- delete a Supplier
+-- delete a Supplier and update all of their Products
 DELETE FROM `Suppliers` WHERE `supplierID` = :supplierID
+UPDATE `Products` SET `supplierID` = NULL WHERE `supplierID` = :supplierID
 
 -- select a Supplier's name and email based on their ID
 SELECT `name`, `email` FROM `Suppliers` WHERE `supplierID` = :supplierID
@@ -97,7 +113,7 @@ SELECT `name`, `email` FROM `Suppliers` WHERE `supplierID` = :supplierID
 -- CALCULATIONS
 
 -- Calculate total order amount for each order
-SELECT o.`orderID`, SUM(od.`quantity` * p.`price`) AS `totalOrderAmount`
+SELECT o.`orderID`, SUM(od.`soldQuantity` * p.`price`) AS `totalOrderAmount`
 FROM `Orders` o
 JOIN `Order_Details` od ON o.`orderID` = od.`orderID`
 JOIN `Products` p ON od.`productID` = p.`productID`
@@ -123,13 +139,13 @@ WHERE e.`employeeID` = :employeeID
 GROUP BY e.`name`
 
 -- Calculate the total quantity ordered for each product
-SELECT p.`name` AS `productName`, SUM(od.`quantity`) AS `totalQuantityOrdered`
+SELECT p.`name` AS `productName`, SUM(od.`soldQuantity`) AS `totalQuantityOrdered`
 FROM `Products` p
 JOIN `Order_Details` od ON p.`productID` = od.`productID`
 GROUP BY p.`name`
 
 -- Calculate the total quantity ordered for each product by a specific customer
-SELECT p.`name` AS `productName`, SUM(od.`quantity`) AS `totalQuantityOrdered`
+SELECT p.`name` AS `productName`, SUM(od.`soldQuantity`) AS `totalQuantityOrdered`
 FROM `Products` p
 JOIN `Order_Details` od ON p.`productID` = od.`productID`
 JOIN `Orders` o ON od.`orderID` = o.`orderID`
