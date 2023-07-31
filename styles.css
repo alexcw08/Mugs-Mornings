@@ -35,7 +35,9 @@ table {
   padding: 40px;
   /* margin-left: auto; */
   margin-right: auto;
-  border-radius: 5px;
+  /* border-radius: 5px; */
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 th,
 td {
@@ -87,4 +89,16 @@ input {
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
+}
+.filterForm {
+  width: 20%;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #c2a599;
+  padding: 0;
+  border-bottom: 1px solid black;
+}
+.filterBtn {
+  padding: 5px;
 }
